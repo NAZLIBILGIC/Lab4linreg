@@ -18,7 +18,7 @@ linreg <- setRefClass(
       .self$data <- data
       .self$fit_model()
     },
-    fit_model <<- function() {
+    fit_model = function() {
       X <- model.matrix(.self$formula, data = .self$data)
       y <- .self$data[[all.vars(.self$formula)[1]]]
       n <- nrow(X)
@@ -28,7 +28,7 @@ linreg <- setRefClass(
       y_hat <- X %*% beta_hat
       residuals <- y - y_hat
       df <- n - p
-      sigma_sq_hat <- sum(residuals ^ 2) / df
+      sigma_sq_hat <- sum(residuals^2) / df
       Var_beta_hat <- sigma_sq_hat * solve(t(X) %*% X)
       
       # Calculate t-values and p-values
@@ -57,10 +57,6 @@ linreg <- setRefClass(
       coef_names <- colnames(.self$coefficients)
       return(setNames(coef_vector, coef_names))
     },
-    print = function() {
-      cat("Coefficients:\n")
-      print(.self$coef())
-    },
     summary = function() {
       cat("Regression Summary:\n")
       cat("Residuals:\n")
@@ -74,13 +70,10 @@ linreg <- setRefClass(
       cat("P-values:\n")
       print(.self$p_values)
     },
-    
-    
     plot = function() {
       library(ggplot2)
       
-      df <-
-        data.frame(Residuals = .self$resid(), Fitted = .self$pred())
+      df <- data.frame(Residuals = .self$resid(), Fitted = .self$pred())
       
       p1 <- ggplot(df, aes(x = Fitted, y = Residuals)) +
         geom_point() +
@@ -91,15 +84,14 @@ linreg <- setRefClass(
           geom = "line"
         ) +
         labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals") +
-        theme(axis.title.y = element_text(vjust = 0.5, size = 10))
+        theme(axis.title.y = element_text(vjust = 0.5, size = 10)
+        )
       
       std_residuals <- .self$residuals / sd(.self$residuals)
       sqrt_std_residuals <- sqrt(abs(std_residuals))
       
-      df_std <-
-        data.frame(Fitted = .self$pred(), Sqrt_Std_Residuals = sqrt_std_residuals)
-      p2 <-
-        ggplot(df_std, aes(x = Fitted, y = Sqrt_Std_Residuals)) +
+      df_std <- data.frame(Fitted = .self$pred(), Sqrt_Std_Residuals = sqrt_std_residuals)
+      p2 <- ggplot(df_std, aes(x = Fitted, y = Sqrt_Std_Residuals)) +
         geom_point() +
         stat_summary(
           fun = mean,
@@ -107,9 +99,7 @@ linreg <- setRefClass(
           colour = "red",
           geom = "line"
         ) +
-        labs(title = "Scale-Location",
-             x = "Fitted values",
-             y = expression(sqrt("|Standardized residuals|"))) +
+        labs(title = "Scale-Location", x = "Fitted values", y = expression(sqrt("|Standardized residuals|"))) +
         theme(axis.title.y = element_text(vjust = 0.5, size = 10)) +
         theme(axis.title.x = element_text(vjust = 0.5, size = 10)) +
         theme(plot.title = element_text(size = 10, hjust = 0.5)) +
@@ -131,4 +121,3 @@ mod_object$fit_model()
 mod_object$summary()
 
 mod_object$plot()
-mod_object$show_p()
