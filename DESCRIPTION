@@ -1,0 +1,10 @@
+Package: Lab4Linreg
+Type: Package
+Title: Linear regression RC
+Version: 0.1.0
+Author: Nazli Bilgic, Anastasia Piadi
+Maintainer: The package maintainer <yourself@somewhere.net>
+Description: Linear regression RC Lab4.
+License: MIT
+Encoding: UTF-8
+LazyData: true
