@@ -1,5 +1,6 @@
 library(ggplot2)
 
+# Define the linreg class
 linreg <- setRefClass(
   "linreg",
   fields = list(
@@ -61,21 +62,41 @@ linreg <- setRefClass(
     },
     summary = function() {
       cat("Regression Summary:\n")
-      cat("Residuals:\n")
-      print(head(.self$residuals))
-      cat("Degrees of Freedom: ", .self$degrees_of_freedom, "\n")
-      cat("Residual Variance: ", .self$residual_variance, "\n")
+
+      cat("(Intercept) Sepal.Width  Sepal.Length\n")
+      cat(sprintf("  % 9.2f % 9.2f % 9.2f ***\n",
+                  .self$coefficients[1],
+                  .self$coefficients[2],
+                  .self$coefficients[3]))
+
+      cat("Residual standard error: ")
+      cat(sprintf("%.2f", sqrt(.self$residual_variance)))
+      cat(" on ")
+      cat(.self$degrees_of_freedom)
+      cat(" degrees of freedom\n")
+
+      cat("Residual Variance: ")
+      cat(sprintf("%.7f", .self$residual_variance))
+      cat("\n")
+
       cat("Variance of Coefficients:\n")
       print(.self$variance_of_coefficients)
-      cat("T-values:\n")
+
+      cat("\nT-values:\n")
       print(.self$t_values)
-      cat("P-values:\n")
+
+      cat("\nP-values:\n")
       print(.self$p_values)
     },
-    show = function(){
-      cat("Coefficients:\n")
+
+    show = function() {
+      cat("linreg")
+      cat("\nFormula: ", as.character(.self$formula))
+      cat("\nData: ", deparse(substitute(.self$data)))
+      cat("\nCoefficients:\n")
       print(.self$coef())
     },
+
     plot = function() {
       df <- data.frame(Residuals = .self$resid(), Fitted = .self$pred())
 
@@ -88,7 +109,8 @@ linreg <- setRefClass(
           geom = "line"
         ) +
         labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals") +
-        theme(axis.title.y = element_text(vjust = 0.5, size = 10))
+        theme(axis.title.y = element_text(vjust = 0.5, size = 10)
+        )
 
       std_residuals <- .self$residuals / sd(.self$residuals)
       sqrt_std_residuals <- sqrt(abs(std_residuals))
@@ -103,22 +125,24 @@ linreg <- setRefClass(
           geom = "line"
         ) +
         labs(title = "Scale-Location", x = "Fitted values", y = expression(sqrt("|Standardized residuals|"))) +
-        theme(axis.title.y = element_text(vjust = 0.5, size = 10),
-              axis.title.x = element_text(vjust = 0.5, size = 10),
-              plot.title = element_text(size = 10, hjust = 0.5),
-              theme_bw()
+        theme(
+          axis.title.y = element_text(vjust = 0.5, size = 10),
+          axis.title.x = element_text(vjust = 0.5, size = 10),
+          plot.title = element_text(size = 10, hjust = 0.5),
+          theme_bw()
         )
 
       # Print the plots
       print(p1)
       print(p2)
     }
+      )
   )
-)
 
-data(iris)
-mod_object <- linreg(Petal.Length~Species, data = iris)
-#mod_object$fit_model()
-#mod_object$summary()
-#mod_object$plot()
-print(mod_object)
+  data(iris)
+  mod_object <- linreg(Petal.Length~Species, data = iris)
+
+  # Use the "show" method to display the object
+  mod_object$summary()
+
+
