@@ -8,3 +8,6 @@ Description: Linear regression RC Lab4.
 License: MIT
 Encoding: UTF-8
 LazyData: true
+Suggests: 
+    testthat (>= 3.0.0)
+Config/testthat/edition: 3

@@ -18,7 +18,7 @@ linreg <- setRefClass(
       .self$data <- data
       .self$fit_model()
     },
-    fit_model = function() {
+    fit_model <- function() {
       X <- model.matrix(.self$formula, data = .self$data)
       y <- .self$data[[all.vars(.self$formula)[1]]]
       n <- nrow(X)
@@ -45,19 +45,19 @@ linreg <- setRefClass(
       .self$t_values <- t_values
       .self$p_values <- p_values
     },
-    resid = function() {
+    resid <- function() {
       residuals_vector <- .self$residuals
       return(residuals_vector)
     },
-    pred = function() {
+    pred <- function() {
       return(.self$predicted)
     },
-    coef = function() {
+    coef <- function() {
       coef_vector <- as.vector(.self$coefficients)
       coef_names <- colnames(.self$coefficients)
       return(setNames(coef_vector, coef_names))
     },
-    summary = function() {
+    summary <- function() {
       cat("Regression Summary:\n")
       cat("Residuals:\n")
       print(head(.self$residuals))
@@ -70,7 +70,11 @@ linreg <- setRefClass(
       cat("P-values:\n")
       print(.self$p_values)
     },
-    plot = function() {
+    show <- function(){
+      cat("Coefficients:\n")
+      print(.self$coef())
+    },
+    plot <- function() {
       library(ggplot2)
       
       df <- data.frame(Residuals = .self$resid(), Fitted = .self$pred())
