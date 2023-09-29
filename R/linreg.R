@@ -120,8 +120,11 @@ data(iris)
 
 mod_object <- linreg(Petal.Length ~ Species, data = iris)
 
-mod_object$fit_model()
+print(mod_object)
+summary(mod_object)
 
-mod_object$summary()
+#mod_object$fit_model()
 
-mod_object$plot()
+#mod_object$summary()
+
+#mod_object$plot()
