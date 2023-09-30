@@ -63,21 +63,28 @@ linreg <- setRefClass(
     summary = function() {
       cat("Regression Summary:\n")
 
-      cat("(Intercept) Sepal.Width  Sepal.Length\n")
-      cat(sprintf("  % 9.2f % 9.2f % 9.2f ***\n",
+      cat("Coefficients:\n")
+      cat("             Estimate  Std. Error  t value  Pr(>|t|)\n")
+      cat(sprintf("(Intercept) %9.4f %9.4f %7.2f %9.2e ***\n",
                   .self$coefficients[1],
-                  .self$coefficients[2],
-                  .self$coefficients[3]))
+                  sqrt(.self$variance_of_coefficients[1, 1]),
+                  .self$t_values[1],
+                  .self$p_values[1]))
+      for (i in 2:length(.self$coefficients)) {
+        cat(sprintf("Species%s  %9.4f %9.4f %7.2f %9.2e\n",
+                    colnames(.self$coefficients)[i],
+                    .self$coefficients[i],
+                    sqrt(.self$variance_of_coefficients[i, i]),
+                    .self$t_values[i],
+                    .self$p_values[i]))
+      }
 
       cat("Residual standard error: ")
-      cat(sprintf("%.2f", sqrt(.self$residual_variance)))
-      cat(" on ")
-      cat(.self$degrees_of_freedom)
-      cat(" degrees of freedom\n")
+      cat(sprintf("%.2f on %d degrees of freedom\n",
+                  sqrt(.self$residual_variance), .self$degrees_of_freedom))
 
       cat("Residual Variance: ")
-      cat(sprintf("%.7f", .self$residual_variance))
-      cat("\n")
+      cat(sprintf("%.7f\n", .self$residual_variance))
 
       cat("Variance of Coefficients:\n")
       print(.self$variance_of_coefficients)
@@ -88,6 +95,7 @@ linreg <- setRefClass(
       cat("\nP-values:\n")
       print(.self$p_values)
     },
+
 
     show = function() {
       cat("linreg")
@@ -142,7 +150,6 @@ linreg <- setRefClass(
   data(iris)
   mod_object <- linreg(Petal.Length~Species, data = iris)
 
-  # Use the "show" method to display the object
   mod_object$summary()
 
 
