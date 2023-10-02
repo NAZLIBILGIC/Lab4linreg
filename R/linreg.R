@@ -1,36 +1,5 @@
 library(ggplot2)
-#'A function for the multiple regression modEL
-#'@description
-#'The function receives 2 arguments formula and data and uses linear algebra and returns of class linreg as an RC class.
-#'A reference class called "linreg" is defined using "setRefClass". It is used to perform a linear regression analysis on a data set providing the summary of the results.The class and the methods are designed to make the linear regression model more user friendly and organised.
-#'
-#'The fields list is created to define the fields that an object of the linreg class will have.
-#'
-#'The methods list is created to define the methods (functions) that can be applied to objects of the linreg class.These methods assist to perform various operations on the linear regression model.
-#'
-#'Initialize: Constructor method for creating a linreg object. It takes a formula and data as arguments, stores them, and then calls fit_model to perform the regression.
-#'The fit model uses the provided formula and data, calculating coefficients, residuals, and various statistics.
-#'The resid returns the residuals as a vector.
-#'The pred returns the predicted values.
-#'The coef returns the coefficients with their names.
-#'The summary prints a summary of the linear regression model, including coefficients, standard errors, t-values, p-values, residual standard error, and variance of coefficients.
-#'The show displays basic information about the linreg object, including the formula, data, and coefficients.
-#'The plot generates and displays two diagnostic plots for the linear regression model: "Residuals vs Fitted" and "Scale-Location".
-#'
-#'@param formula The formula argument should take a formula object. It includes the formula given from the user so that the function will do the calculations for the regression.
-#'@param data It must be a data frame and it includes the data for the regression. 
-#'@param coefficients It must be a matrix. A matrix to store the regression coefficients.
-#'@param residuals It must be an array. It is used to store the residuals.
-#'@param predicted It must be a matrix. It is used to store the predicted values.
-#'@param degrees_of_freedom The type should be numeric. It is used to store the degrees of freedom.
-#'@param residual_variance A numeric value for the residual variance.
-#'@param variance_of_coefficients It must be a matrix. It is used to store the variance of the coefficients.
-#'@param t_values It must be a matrix to store the t values.
-#'@param p_values It must be a matrix to store the p values.
-#'
-#'@return The function returns an object of class linreg as an RC class.
-#'
-#'@export
+
 # Define the linreg class
 linreg <- setRefClass(
   "linreg",
@@ -94,21 +63,19 @@ linreg <- setRefClass(
     summary = function() {
       cat("Regression Summary:\n")
 
-      cat("Coefficients:\n")
       cat("             Estimate  Std. Error  t value  Pr(>|t|)\n")
-      cat(sprintf("(Intercept) %9.4f %9.4f %7.2f %9.2e ***\n",
-                  .self$coefficients[1],
-                  sqrt(.self$variance_of_coefficients[1, 1]),
-                  .self$t_values[1],
-                  .self$p_values[1]))
-      for (i in 2:length(.self$coefficients)) {
-        cat(sprintf("Species%s  %9.4f %9.4f %7.2f %9.2e\n",
-                    colnames(.self$coefficients)[i],
-                    .self$coefficients[i],
-                    sqrt(.self$variance_of_coefficients[i, i]),
-                    .self$t_values[i],
-                    .self$p_values[i]))
-      }
+
+      # Create a data frame for the coefficients
+      coefficients_df <- data.frame(
+        Variable = c("(Intercept)", "Speciesversicolor", "Speciesvirginica"),
+        Estimate = c(.self$coefficients[1], .self$coefficients["Speciesversicolor"], .self$coefficients["Speciesvirginica"]),
+        Std.Error = c(sqrt(.self$variance_of_coefficients[1, 1]), sqrt(.self$variance_of_coefficients["Speciesversicolor", "Speciesversicolor"]), sqrt(.self$variance_of_coefficients["Speciesvirginica", "Speciesvirginica"])),
+        t.value = c(.self$t_values[1], .self$t_values["Speciesversicolor"], .self$t_values["Speciesvirginica"]),
+        p.value = c(.self$p_values[1], .self$p_values["Speciesversicolor"], .self$p_values["Speciesvirginica"])
+      )
+
+      # Print the coefficients data frame
+      print(coefficients_df)
 
       cat("Residual standard error: ")
       cat(sprintf("%.2f on %d degrees of freedom\n",
@@ -116,23 +83,13 @@ linreg <- setRefClass(
 
       cat("Residual Variance: ")
       cat(sprintf("%.7f\n", .self$residual_variance))
-
-      cat("Variance of Coefficients:\n")
-      print(.self$variance_of_coefficients)
-
-      cat("\nT-values:\n")
-      print(.self$t_values)
-
-      cat("\nP-values:\n")
-      print(.self$p_values)
     },
 
-
     show = function() {
-      cat("linreg")
-      cat("\nFormula: ", as.character(.self$formula))
-      cat("\nData: ", deparse(substitute(.self$data)))
-      cat("\nCoefficients:\n")
+      cat("linreg object details:\n")
+      cat("Formula: ", as.character(.self$formula), "\n")
+      cat("Data: ", deparse(substitute(.self$data)), "\n")
+      cat("Coefficients:\n")
       print(.self$coef())
     },
 
