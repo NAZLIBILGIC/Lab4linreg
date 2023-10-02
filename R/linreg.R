@@ -27,16 +27,34 @@ linreg <- setRefClass(
       n <- nrow(X)
       p <- ncol(X)
 
+
+
+
       beta_hat <- solve(t(X) %*% X) %*% t(X) %*% y
+
       y_hat <- X %*% beta_hat
+
       residuals <- y - y_hat
       df <- n - p
+
+
       sigma_sq_hat <- sum(residuals^2) / df
+
       Var_beta_hat <- sigma_sq_hat * solve(t(X) %*% X)
 
       # Calculate t-values and p-values
       t_values <- beta_hat / sqrt(diag(Var_beta_hat))
+      print.default(as.vector(t_values))
       p_values <- 2 * (1 - pt(abs(t_values), df))
+
+      # Handle cases of zero standard errors
+      zero_se_indices <- which(diag(Var_beta_hat) == 0)
+      t_values[zero_se_indices] <- NA
+      p_values[zero_se_indices] <- NA
+
+
+      formatted_p_values <- format(p_values, scientific = TRUE)
+
 
       # Store the computed statistics
       .self$coefficients <- beta_hat
@@ -47,6 +65,7 @@ linreg <- setRefClass(
       .self$variance_of_coefficients <- Var_beta_hat
       .self$t_values <- t_values
       .self$p_values <- p_values
+
     },
     resid = function() {
       residuals_vector <- .self$residuals
@@ -56,42 +75,45 @@ linreg <- setRefClass(
       return(.self$predicted)
     },
     coef = function() {
-      coef_vector <- as.vector(.self$coefficients)
+      coef_vector <- (.self$coefficients)
       coef_names <- colnames(.self$coefficients)
       return(setNames(coef_vector, coef_names))
     },
     summary = function() {
       cat("Regression Summary:\n")
 
-      cat("             Estimate  Std. Error  t value  Pr(>|t|)\n")
+      #print.default(as.vector(t_values))
 
       # Create a data frame for the coefficients
       coefficients_df <- data.frame(
-        Variable = c("(Intercept)", "Speciesversicolor", "Speciesvirginica"),
-        Estimate = c(.self$coefficients[1], .self$coefficients["Speciesversicolor"], .self$coefficients["Speciesvirginica"]),
-        Std.Error = c(sqrt(.self$variance_of_coefficients[1, 1]), sqrt(.self$variance_of_coefficients["Speciesversicolor", "Speciesversicolor"]), sqrt(.self$variance_of_coefficients["Speciesvirginica", "Speciesvirginica"])),
-        t.value = c(.self$t_values[1], .self$t_values["Speciesversicolor"], .self$t_values["Speciesvirginica"]),
-        p.value = c(.self$p_values[1], .self$p_values["Speciesversicolor"], .self$p_values["Speciesvirginica"])
+        Variable = rownames(p_values),
+        Estimate = as.vector(coefficients),
+       Std.Error = c(sqrt(.self$variance_of_coefficients[1, 1]), sqrt(.self$variance_of_coefficients["Speciesversicolor", "Speciesversicolor"]), sqrt(.self$variance_of_coefficients["Speciesvirginica", "Speciesvirginica"])),
+       #Std.Error=as.vector (variance_of_coefficients),
+       t.value = as.vector(t_values),
+        p.value = as.vector(p_values)
       )
-
+      #print.default(variance_of_coefficients)
       # Print the coefficients data frame
-      print(coefficients_df)
+      return(coefficients_df)
 
-      cat("Residual standard error: ")
-      cat(sprintf("%.2f on %d degrees of freedom\n",
-                  sqrt(.self$residual_variance), .self$degrees_of_freedom))
+      #cat("Residual standard error: ")
+      #cat(sprintf("%.2f on %d degrees of freedom\n",
+       #           sqrt(.self$residual_variance), .self$degrees_of_freedom))
 
-      cat("Residual Variance: ")
-      cat(sprintf("%.7f\n", .self$residual_variance))
+      #cat("Residual Variance: ")
+      #cat(sprintf("%.7f\n", .self$residual_variance))
     },
 
-    show = function() {
-      cat("linreg object details:\n")
-      cat("Formula: ", as.character(.self$formula), "\n")
-      cat("Data: ", deparse(substitute(.self$data)), "\n")
+    print = function() {
+
+      function_name <- gsub(".*[.]", "", as.character(sys.call(1)))
+      cat("Call:\n")
+      cat(paste("linreg(formula = ", format(formula), ", data =",deparse(substitute(.self$data)), ")\n"))
       cat("Coefficients:\n")
-      print(.self$coef())
+      print.default(t(.self$coef()))
     },
+
 
     plot = function() {
       df <- data.frame(Residuals = .self$resid(), Fitted = .self$pred())
@@ -137,7 +159,7 @@ linreg <- setRefClass(
 
   data(iris)
   mod_object <- linreg(Petal.Length~Species, data = iris)
-
+  mod_object$print()
   mod_object$summary()
 
 
