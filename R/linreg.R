@@ -1,5 +1,5 @@
 library(ggplot2)
-#'A function for the multiple regression model
+#'A function for the multiple regression modEL
 #'@description
 #'The function receives 2 arguments formula and data and uses linear algebra and returns of class linreg as an RC class.
 #'A reference class called "linreg" is defined using "setRefClass". It is used to perform a linear regression analysis on a data set providing the summary of the results.The class and the methods are designed to make the linear regression model more user friendly and organised.
