@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 ```{r setup}
 library(Lab4Linreg)
+mod_object <- linreg(formula = Petal.Length ~ Species , data = iris)
 ```
 
 
@@ -23,29 +24,6 @@ library(Lab4Linreg)
 
 This document provides documentation for the linreg class which is tested with iris data set a tool for performing multiple linear regression analysis in R. The linreg class simplifies the process of fitting linear regression models and presenting the results of the statistics.
 
-
-#Installation and usage
-
-To use the linreg class, first, make sure you have the required library installed.
-
-```{r}
-#Install and load the required library
-install.packages("ggplot2")
-library(ggplot2)
-```
-
-# Load the linreg class
-```{r, eval=TRUE, include=TRUE}
-source("linreg.R")
-```
-`
-
-# Create a linreg object
-#You can create and initialize a linreg object with your formula and data set.
-```{r, eval=TRUE, include=TRUE}
-data(iris)
-mod_object <- linreg(formula = Petal.Length ~ Species , data = iris)
-```
 
 # resid() 
 #It returns the vector of residuals.
@@ -81,7 +59,7 @@ mod_object$print()
 
 
 #Plot()
-#It presents the plots
+#It generates the plots using ggplot2
 ```{r, eval=TRUE, include=TRUE}
 library(ggplot2)
 plot_results=mod_object$plot()
@@ -89,14 +67,14 @@ plot_results=mod_object$plot()
 
 
 #1st plot
-#It shows the first plot
+#It shows the first plot with the residuals and the fitted values.
 ```{r, eval=TRUE, include=TRUE}
 plot_results[1]
 ```
 
 
-#2st plot
-#It shows the first plot
+#2nd plot
+#It shows the second plot with the square root of the standardized residuals and the fitted values.
 ```{r, eval=TRUE, include=TRUE}
 plot_results[2]
 ```
