@@ -175,8 +175,8 @@ linreg <- setRefClass(
           axis.title.x = element_text(vjust = 0.5, size = 10),
           plot.title = element_text(size = 10, hjust = 0.5)
         )+theme_bw()
-      return(list(p1,p2))
-
+      plot_results<-list(p1,p2)
+      return(plot_results)
     }
       )
   )
