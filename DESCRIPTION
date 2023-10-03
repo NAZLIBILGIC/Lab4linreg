@@ -15,5 +15,6 @@ Suggests:
 Config/testthat/edition: 3
 RoxygenNote: 7.2.3
 Imports: 
-  ggplot2
+  ggplot2,
+  methods
 VignetteBuilder: knitr
