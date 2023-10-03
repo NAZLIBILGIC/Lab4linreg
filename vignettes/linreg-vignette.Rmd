@@ -1,0 +1,77 @@
+---
+title: "linreg_vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{linreg_vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+#Linear regression model has been created
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(Lab4Linreg)
+```
+
+
+#Introduction
+
+This document provides documentation for the linreg class which is tested with iris data set a tool for performing multiple linear regression analysis in R. The linreg class simplifies the process of fitting linear regression models and presenting the results of the statistics.
+
+
+#Installation and usage
+
+To use the linreg class, first, make sure you have the required library installed.
+
+```{r}
+# Install and load the required library
+install.packages("ggplot2")
+library(ggplot2)
+```
+
+
+
+
+# Load the linreg class
+source("linreg.R")
+
+# Create a linreg object
+You can create and initialize a linreg object. The user should replace in this command the "my_data" with the data of their preferance.
+```{r, eval=TRUE, include=TRUE}
+methods <- linreg$initialize(formula = Petal.Length ~ Species , data = iris)
+```
+
+# resid() Returns the vector of residuals
+```{r, eval=TRUE, include=TRUE}
+mod_object$resid()
+```
+
+# pred() Returns the predicted values
+```{r, eval=TRUE, include=TRUE, output.lines=4}
+mod_object$pred()
+```
+
+
+# coef() Returns the coefficients
+```{r, eval=TRUE, include=TRUE}
+mod_object$coef()
+```
+
+# summary() Presents the coefficients with their standard error, p-values and t-values and the estimatation of σˆ and the degrees of the freedom.
+```{r, eval=TRUE, include=TRUE}
+mod_object$summary()
+```
+
+
+# Print() prints out the coefficients and coefficient names
+```{r, eval=TRUE, include=TRUE}
+mod_object$print()
+```
+
+
+
