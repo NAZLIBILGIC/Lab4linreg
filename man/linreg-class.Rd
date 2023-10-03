@@ -4,7 +4,7 @@
 \name{linreg-class}
 \alias{linreg-class}
 \alias{linreg}
-\title{A function for the multiple regression modEL}
+\title{A function for the multiple regression model}
 \arguments{
 \item{formula}{The formula argument should take a formula object. It includes the formula given from the user so that the function will do the calculations for the regression.}
 

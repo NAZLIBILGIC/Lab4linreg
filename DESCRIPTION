@@ -18,3 +18,5 @@ Imports:
   ggplot2,
   methods
 VignetteBuilder: knitr
+Data:
+  datasets/iris.Rda
