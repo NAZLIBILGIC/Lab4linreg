@@ -155,7 +155,7 @@ linreg <- setRefClass(
         ) +
         labs(title = "Residuals vs Fitted", x = "Fitted values", y = "Residuals") +
         theme(axis.title.y = element_text(vjust = 0.5, size = 10)
-        )
+        )+theme_bw()
 
       std_residuals <- .self$residuals / sd(.self$residuals)
       sqrt_std_residuals <- sqrt(abs(std_residuals))
@@ -173,20 +173,18 @@ linreg <- setRefClass(
         theme(
           axis.title.y = element_text(vjust = 0.5, size = 10),
           axis.title.x = element_text(vjust = 0.5, size = 10),
-          plot.title = element_text(size = 10, hjust = 0.5),
-          theme_bw()
-        )
+          plot.title = element_text(size = 10, hjust = 0.5)
+        )+theme_bw()
+      return(list(p1,p2))
 
-      # Print the plots
-      print(p1)
-      print(p2)
     }
       )
   )
 
-# data(iris)
-# mod_object <- linreg(Petal.Length~Species, data = iris)
+#data(iris)
+#mod_object <- linreg(Petal.Length~Species, data = iris)
 # mod_object$print()
 # mod_object$summary()
+#mod_object$plot()
 
 
