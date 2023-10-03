@@ -69,7 +69,7 @@ linreg <- setRefClass(
       beta_hat <- solve(t(X) %*% X) %*% t(X) %*% y
 
       y_hat <- X %*% beta_hat
-      residuals <- y - y_hat
+      residuals <<- y - y_hat
       df <- n - p
 
       sigma_sq_hat <- sum(residuals^2) / df
@@ -77,15 +77,15 @@ linreg <- setRefClass(
       Var_beta_hat <- sigma_sq_hat * solve(t(X) %*% X)
 
       # Calculate t-values and p-values
-      t_values <- beta_hat / sqrt(diag(Var_beta_hat))
+      t_values <<- beta_hat / sqrt(diag(Var_beta_hat))
 
       #print.default(as.vector(t_values))
-      p_values <- 2 * (1 - pt(abs(t_values), df))
+      p_values <<- 2 * (1 - pt(abs(t_values), df))
 
       # Handle cases of zero standard errors
       zero_se_indices <- which(diag(Var_beta_hat) == 0)
-      t_values[zero_se_indices] <- NA
-      p_values[zero_se_indices] <- NA
+      t_values[zero_se_indices] <<- NA
+      p_values[zero_se_indices] <<- NA
 
 
       formatted_p_values <- format(p_values, scientific = TRUE)
