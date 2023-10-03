@@ -1,4 +1,3 @@
-library(ggplot2)
 #'A function for the multiple regression model
 #'@description
 #'The function receives 2 arguments formula and data and uses linear algebra and returns of class linreg as an RC class.
